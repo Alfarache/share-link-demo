@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <title>You've received a gift! 🎁</title>
+    
+    <!-- Open Graph Meta Tags -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="You've received a gift! 🎁" />
+    <meta property="og:description" content="Someone special sent you a $50 gift card" />
+    <meta property="og:url" content="https://yourapp.com/gift/abc123" />
+    <meta property="og:site_name" content="YourApp" />
+    
+    <!-- Rest of your HTML... -->
+    <!-- iOS App Banner -->
+    <!-- <meta name="apple-itunes-app" content="app-id=YOUR_APP_ID, app-argument=yourapp://gift/abc123"> -->
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        /* Animated background elements */
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: #ff6b6b;
+            animation: fall 3s linear infinite;
+        }
+        
+        @keyframes fall {
+            0% {
+                transform: translateY(-100vh) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+        
+        .container {
+            background: white;
+            border-radius: 24px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            max-width: 500px;
+            width: 100%;
+            overflow: hidden;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .gift-header {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
+            padding: 40px 32px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .gift-header::before {
+            content: '🎉';
+            position: absolute;
+            font-size: 100px;
+            opacity: 0.1;
+            top: -20px;
+            right: -20px;
+            transform: rotate(15deg);
+        }
+        
+        .gift-header::after {
+            content: '🎁';
+            position: absolute;
+            font-size: 80px;
+            opacity: 0.1;
+            bottom: -10px;
+            left: -10px;
+            transform: rotate(-15deg);
+        }
+        
+        .gift-icon {
+            font-size: 80px;
+            margin-bottom: 16px;
+            animation: bounce 2s ease-in-out infinite;
+        }
+        
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+        
+        .gift-title {
+            font-size: 28px;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 8px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .gift-subtitle {
+            font-size: 16px;
+            color: rgba(255,255,255,0.9);
+            font-weight: 500;
+        }
+        
+        .gift-card-container {
+            padding: 32px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .gift-card {
+            width: 100%;
+            max-width: 380px;
+            aspect-ratio: 1.586;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+        
+        .gift-card:hover {
+            transform: translateY(-5px) scale(1.02);
+        }
+        
+        .gift-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            animation: shimmer 3s ease-in-out infinite;
+        }
+        
+        @keyframes shimmer {
+            0%, 100% { transform: translate(0, 0); }
+            50% { transform: translate(-30%, -30%); }
+        }
+        
+        .gift-card-content {
+            position: relative;
+            z-index: 1;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            color: white;
+        }
+        
+        .gift-card-brand {
+            font-size: 20px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        
+        .gift-card-amount {
+            text-align: center;
+            margin: 20px 0;
+        }
+        
+        .currency {
+            font-size: 32px;
+            font-weight: 300;
+            opacity: 0.9;
+        }
+        
+        .amount {
+            font-size: 72px;
+            font-weight: 700;
+            line-height: 1;
+            text-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+        
+        .gift-card-code {
+            background: rgba(255,255,255,0.2);
+            padding: 12px;
+            border-radius: 8px;
+            text-align: center;
+            font-family: 'Courier New', monospace;
+            font-size: 18px;
+            font-weight: 600;
+            letter-spacing: 3px;
+            backdrop-filter: blur(10px);
+        }
+        
+        .message-section {
+            width: 100%;
+            margin-top: 24px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 12px;
+        }
+        
+        .message-label {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #86868b;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+        
+        .message-text {
+            font-size: 16px;
+            color: #1d1d1f;
+            line-height: 1.5;
+            font-style: italic;
+        }
+        
+        .sender-info {
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid #e5e5e7;
+            font-size: 14px;
+            color: #86868b;
+        }
+        
+        .sender-name {
+            color: #667eea;
+            font-weight: 600;
+        }
+        
+        .actions {
+            padding: 0 32px 32px;
+        }
+        
+        .redeem-btn {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
+            color: white;
+            padding: 18px 32px;
+            border-radius: 12px;
+            text-align: center;
+            text-decoration: none;
+            display: block;
+            font-weight: 700;
+            font-size: 18px;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            width: 100%;
+            box-shadow: 0 4px 12px rgba(255,107,107,0.3);
+        }
+        
+        .redeem-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255,107,107,0.4);
+        }
+        
+        .redeem-btn:active {
+            transform: translateY(0);
+        }
+        
+        .secondary-actions {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-top: 12px;
+        }
+        
+        .secondary-btn {
+            background: #f5f5f7;
+            color: #1d1d1f;
+            padding: 12px;
+            border-radius: 10px;
+            text-align: center;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            transition: background 0.2s;
+            border: none;
+            cursor: pointer;
+        }
+        
+        .secondary-btn:hover {
+            background: #e5e5e7;
+        }
+        
+        .details-section {
+            padding: 24px 32px;
+            background: #f8f9fa;
+        }
+        
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid #e5e5e7;
+        }
+        
+        .detail-row:last-child {
+            border-bottom: none;
+        }
+        
+        .detail-label {
+            font-size: 14px;
+            color: #86868b;
+        }
+        
+        .detail-value {
+            font-size: 14px;
+            color: #1d1d1f;
+            font-weight: 600;
+        }
+        
+        .footer {
+            text-align: center;
+            padding: 24px;
+            color: #86868b;
+            font-size: 13px;
+        }
+        
+        .footer a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+        }
+        
+        /* Modal for terms */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .modal.active {
+            display: flex;
+        }
+        
+        .modal-content {
+            background: white;
+            border-radius: 16px;
+            padding: 24px;
+            max-width: 500px;
+            width: 100%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+        
+        .modal-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #1d1d1f;
+        }
+        
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 28px;
+            color: #86868b;
+            cursor: pointer;
+            padding: 0;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        @media (max-width: 600px) {
+            .gift-title {
+                font-size: 24px;
+            }
+            
+            .amount {
+                font-size: 56px;
+            }
+            
+            .gift-card {
+                max-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Confetti elements -->
+    <div class="confetti" style="left: 10%; animation-delay: 0s; background: #ff6b6b;"></div>
+    <div class="confetti" style="left: 20%; animation-delay: 0.5s; background: #4ecdc4;"></div>
+    <div class="confetti" style="left: 30%; animation-delay: 1s; background: #ffe66d;"></div>
+    <div class="confetti" style="left: 40%; animation-delay: 1.5s; background: #95e1d3;"></div>
+    <div class="confetti" style="left: 50%; animation-delay: 2s; background: #ff6b6b;"></div>
+    <div class="confetti" style="left: 60%; animation-delay: 2.5s; background: #a8e6cf;"></div>
+    <div class="confetti" style="left: 70%; animation-delay: 0.3s; background: #ffd93d;"></div>
+    <div class="confetti" style="left: 80%; animation-delay: 1.8s; background: #6bcf7f;"></div>
+    <div class="confetti" style="left: 90%; animation-delay: 2.2s; background: #ff6b6b;"></div>
+    
+    <div class="container">
+        <!-- Gift Header -->
+        <div class="gift-header">
+            <div class="gift-icon">🎁</div>
+            <h1 class="gift-title">You've Received a Gift!</h1>
+            <p class="gift-subtitle">Open to reveal your surprise</p>
+        </div>
+        
+        <!-- Gift Card -->
+        <div class="gift-card-container">
+            <div class="gift-card" onclick="revealCard()">
+                <div class="gift-card-content">
+                    <div class="gift-card-brand">YourApp</div>
+                    
+                    <div class="gift-card-amount">
+                        <div class="currency">$</div>
+                        <div class="amount">50</div>
+                    </div>
+                    
+                    <div class="gift-card-code" id="giftCode">
+                        GIFT-XXXX-XXXX
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Personal Message -->
+            <div class="message-section">
+                <div class="message-label">Personal Message</div>
+                <div class="message-text">
+                    "May this help you find comfort ❤️"
+                </div>
+                <div class="sender-info">
+                    From: <span class="sender-name">Sarah</span> • 
+                    <span id="giftDate">Today</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Actions -->
+        <div class="actions">
+            <button class="redeem-btn" onclick="redeemGift()">
+                🎉 Redeem Gift Card
+            </button>
+            
+            <div class="secondary-actions">
+                <button class="secondary-btn" onclick="shareGift()">
+                    ↗️ Share
+                </button>
+                <button class="secondary-btn" onclick="saveToWallet()">
+                    💳 Add to Wallet
+                </button>
+            </div>
+        </div>
+        
+        <!-- Details -->
+        <div class="details-section">
+            <div class="detail-row">
+                <span class="detail-label">Gift Card Value</span>
+                <span class="detail-value">$50.00</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">Balance</span>
+                <span class="detail-value" id="balance">$50.00</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">Expires</span>
+                <span class="detail-value">Never</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">Gift Code</span>
+                <span class="detail-value">
+                    <span id="codeDisplay">••••-••••-••••</span>
+                    <button onclick="copyCode()" style="background: none; border: none; color: #667eea; cursor: pointer; margin-left: 8px;">📋</button>
+                </span>
+            </div>
+        </div>
+        
+        <!-- Footer -->
+        <div class="footer">
+            <p>
+                <a href="#" onclick="showTerms(); return false;">Terms & Conditions</a> • 
+                <a href="#">Get the app</a>
+            </p>
+            <p style="margin-top: 8px; font-size: 11px;">
+                Gift cards are issued by YourApp Inc.<br>
+                Valid only on YourApp purchases.
+            </p>
+        </div>
+    </div>
+    
+    <!-- Terms Modal -->
+    <div class="modal" id="termsModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Terms & Conditions</h2>
+                <button class="modal-close" onclick="closeTerms()">×</button>
+            </div>
+            <div style="font-size: 14px; line-height: 1.6; color: #666;">
+                <h3 style="margin-top: 16px; color: #1d1d1f;">Gift Card Terms</h3>
+                <p>This gift card is redeemable only on YourApp for eligible purchases. Gift cards cannot be redeemed for cash except where required by law.</p>
+                
+                <h3 style="margin-top: 16px; color: #1d1d1f;">Expiration</h3>
+                <p>Gift cards do not expire and there are no fees associated with the card.</p>
+                
+                <h3 style="margin-top: 16px; color: #1d1d1f;">Balance</h3>
+                <p>You can check your gift card balance at any time in your account or by contacting customer support.</p>
+                
+                <h3 style="margin-top: 16px; color: #1d1d1f;">Lost or Stolen Cards</h3>
+                <p>YourApp is not responsible for lost or stolen gift cards. Please treat this card like cash.</p>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Set current date
+        const today = new Date();
+        const dateStr = today.toLocaleDateString('en-US', { 
+            month: 'short', 
+            day: 'numeric',
+            year: 'numeric'
+        });
+        document.getElementById('giftDate').textContent = dateStr;
+        
+        // Reveal gift code
+        let codeRevealed = false;
+        function revealCard() {
+            if (!codeRevealed) {
+                document.getElementById('giftCode').textContent = 'GIFT-2024-ABC123';
+                document.getElementById('codeDisplay').textContent = 'GIFT-2024-ABC123';
+                codeRevealed = true;
+                
+                // Add a little celebration
+                alert('🎉 Gift card revealed! Your code: GIFT-2024-ABC123');
+            }
+        }
+        
+        // Redeem gift
+        function redeemGift() {
+            const appURL = 'yourapp://gift/redeem/abc123';
+            const webURL = 'https://yourapp.com/redeem/abc123';
+            
+            // Try to open app
+            window.location.href = appURL;
+            
+            // Fallback to web after 2 seconds
+            setTimeout(() => {
+                if (confirm('Open in browser to redeem?')) {
+                    window.location.href = webURL;
+                }
+            }, 2000);
+        }
+        
+        // Copy gift code
+        function copyCode() {
+            const code = codeRevealed ? 'GIFT-2024-ABC123' : '';
+            
+            if (!codeRevealed) {
+                alert('Please tap the gift card to reveal the code first!');
+                return;
+            }
+            
+            if (navigator.clipboard) {
+                navigator.clipboard.writeText(code).then(() => {
+                    alert('✅ Gift code copied to clipboard!');
+                });
+            } else {
+                alert('Gift Code: ' + code);
+            }
+        }
+        
+        // Share gift
+        function shareGift() {
+            if (navigator.share) {
+                navigator.share({
+                    title: 'I received a gift card! 🎁',
+                    text: 'Check out this amazing gift I received!',
+                    url: window.location.href
+                }).then(() => {
+                    console.log('Shared successfully');
+                }).catch((error) => {
+                    console.log('Share failed:', error);
+                });
+            } else {
+                const url = window.location.href;
+                if (navigator.clipboard) {
+                    navigator.clipboard.writeText(url).then(() => {
+                        alert('✅ Link copied to clipboard!');
+                    });
+                } else {
+                    alert('Share this link: ' + url);
+                }
+            }
+        }
+        
+        // Add to wallet (Apple Wallet / Google Pay)
+        function saveToWallet() {
+            if (/iPhone|iPad|iPod/.test(navigator.userAgent)) {
+                // iOS - would integrate with Apple Wallet Pass
+                alert('📱 This would add the gift card to Apple Wallet.\n\nIntegration requires a .pkpass file from your backend.');
+            } else if (/Android/.test(navigator.userAgent)) {
+                // Android - would integrate with Google Pay
+                alert('📱 This would add the gift card to Google Pay.\n\nIntegration requires Google Pay API setup.');
+            } else {
+                alert('💳 Wallet integration is available on mobile devices.');
+            }
+        }
+        
+        // Terms modal
+        function showTerms() {
+            document.getElementById('termsModal').classList.add('active');
+        }
+        
+        function closeTerms() {
+            document.getElementById('termsModal').classList.remove('active');
+        }
+        
+        // Close modal on outside click
+        document.getElementById('termsModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeTerms();
+            }
+        });
+        
+        // Track page view (would send to your analytics)
+        console.log('🎁 Gift card page viewed');
+        
+        // Simulate balance check
+        let balance = 50.00;
+        document.getElementById('balance').textContent = '$' + balance.toFixed(2);
+    </script>
+</body>
+</html>
